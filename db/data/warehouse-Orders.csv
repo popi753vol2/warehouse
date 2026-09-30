@@ -1,1 +1,4 @@
 ID,orderDate,totalPrice,currency_code,customer_ID,createdAt,createdBy,modifiedAt,modifiedBy
+8f6b3c12-4d8a-4ac3-a5e1-9c7b5d21ef11,2026-09-30,150.50,USD,a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d,2026-09-30T00:00:00.000Z,Admin,2026-09-30T00:00:00.000Z,Admin
+2adf91ae-cc5a-4d5f-b0a3-fbe4c348a9b6,2026-09-30,89.99,EUR,b1c2d3e4-f5a6-4b7c-9d0e-1f2a3b4c5d6e,2026-09-30T00:00:00.000Z,Admin,2026-09-30T00:00:00.000Z,Admin
+7d91e0f0-8a46-4f60-bb17-6e5d9c7d6f40,2026-09-30,210.75,GEL,c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f,2026-09-30T00:00:00.000Z,Admin,2026-09-30T00:00:00.000Z,Admin

@@ -79,16 +79,8 @@ entity Orders : managed {
                      on products.order.ID = $self.ID;
 }
 
-entity Customers_Orders : managed {
-  key ID       : UUID;
-      customer : Association to Customers;
-      order    : Association to Orders;
-}
-
 entity Customers : managed {
   key ID     : UUID;
       name   : String;
       email  : String;
-      orders : Association to Customers_Orders
-                 on orders.customer.ID = $self.ID;
 }
