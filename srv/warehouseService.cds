@@ -11,3 +11,6 @@ service WarehouseService @(odata: '/warehouse') {
     entity Customers_Orders as projection on warehouse.Customers_Orders;
     
 }
+
+annotate WarehouseService with @(requires: 'authenticated-user');
+
