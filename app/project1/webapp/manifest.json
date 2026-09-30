@@ -51,6 +51,12 @@
           },
           "sap.fe.templates.ListReport.ListReportController#project1::OrdersList": {
             "controllerName": "project1.ext.controller.OrdersListReport"
+          },
+          "sap.fe.templates.ObjectPage.ObjectPageController#project1::ProductsObjectPage": {
+            "controllerName": "project1.ext.controller.ProductsObjectPage"
+          },
+          "sap.fe.templates.ObjectPage.ObjectPageController#project1::OrdersObjectPage": {
+            "controllerName": "project1.ext.controller.OrdersObjectPage"
           }
         }
       }
@@ -160,7 +166,22 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/Products"
+              "contextPath": "/Products",
+              "content": {
+                "header": {
+                  "actions": {
+                    "BackToProducts": {
+                      "text": "Back to Products",
+                      "press": ".extension.project1.ext.controller.ObjectPageExt.onGoBackToProducts",
+                      "visible": true,
+                      "position": {
+                        "anchor": "EditAction",
+                        "placement": "Before"
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         },
@@ -207,7 +228,18 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/Orders"
+              "contextPath": "/Orders",
+              "content": {
+                "header": {
+                  "actions": {
+                    "BackToOrders": {
+                      "text": "Back to Orders",
+                      "press": ".extension.project1.ext.controller.ObjectPageExt.onGoBackToOrders",
+                      "visible": true
+                    }
+                  }
+                }
+              }
             }
           }
         }
