@@ -43,6 +43,18 @@
     }
   },
   "sap.ui5": {
+    "extends": {
+      "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.fe.templates.ListReport.ListReportController#project1::ProductsList": {
+            "controllerName": "project1.ext.controller.ProductsListReport"
+          },
+          "sap.fe.templates.ListReport.ListReportController#project1::OrdersList": {
+            "controllerName": "project1.ext.controller.OrdersListReport"
+          }
+        }
+      }
+    },
     "flexEnabled": true,
     "dependencies": {
       "minUI5Version": "1.152.0",
@@ -92,6 +104,16 @@
           "pattern": "Products({key}):?query:",
           "name": "ProductsObjectPage",
           "target": "ProductsObjectPage"
+        },
+        {
+          "pattern": "Orders:?query:",
+          "name": "OrdersListRoute",
+          "target": "OrdersList"
+        },
+        {
+          "pattern": "Orders({key}):?query:",
+          "name": "OrdersObjectPage",
+          "target": "OrdersObjectPage"
         }
       ],
       "targets": {
@@ -103,6 +125,17 @@
             "settings": {
               "contextPath": "/Products",
               "variantManagement": "Page",
+              "content": {
+                "header": {
+                  "actions": {
+                    "NavigateToOrders": {
+                      "text": "Navigate to Orders",
+                      "press": ".extension.project1.ext.controller.ListReportExt.onGoToOrders",
+                      "visible": true
+                    }
+                  }
+                }
+              },
               "navigation": {
                 "Products": {
                   "detail": {
@@ -128,6 +161,53 @@
             "settings": {
               "editableHeaderContent": false,
               "contextPath": "/Products"
+            }
+          }
+        },
+        "OrdersList": {
+          "type": "Component",
+          "id": "OrdersList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/Orders",
+              "variantManagement": "Page",
+              "content": {
+                "header": {
+                  "actions": {
+                    "NavigateBackToProducts": {
+                      "text": "Navigate Back to Products",
+                      "press": ".extension.project1.ext.controller.ListReportExt.onGoBackToProducts",
+                      "visible": true
+                    }
+                  }
+                }
+              },
+              "navigation": {
+                "Orders": {
+                  "detail": {
+                    "route": "OrdersObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "OrdersObjectPage": {
+          "type": "Component",
+          "id": "OrdersObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "editableHeaderContent": false,
+              "contextPath": "/Orders"
             }
           }
         }

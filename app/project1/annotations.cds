@@ -1,14 +1,14 @@
 using WarehouseService as service from '../../srv/warehouseService';
 
 annotate service.Products with @(
-    UI.HeaderInfo: {
-        TypeName: 'Product',
+    UI.HeaderInfo                : {
+        TypeName      : 'Product',
         TypeNamePlural: 'Products',
-        Title: {
+        Title         : {
             $Type: 'UI.DataField',
             Value: name,
         },
-        Description: {
+        Description   : {
             $Type: 'UI.DataField',
             Value: descr,
         },
@@ -144,3 +144,138 @@ annotate service.Products with {
         }
     );
 };
+
+annotate service.Orders with @(
+    UI.HeaderInfo                : {
+        TypeName      : 'Order',
+        TypeNamePlural: 'Orders',
+        Title         : {
+            $Type: 'UI.DataField',
+            Value: orderDate,
+        },
+    },
+    UI.Facets                    : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'GeneratedFacet1',
+            Label : 'General Information',
+            Target: '@UI.FieldGroup#GeneratedGroup',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'OrderItems',
+            Label : 'Items',
+            Target: 'products/@UI.LineItem',
+        },
+    ],
+
+    UI.FieldGroup #GeneratedGroup: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Label: 'ID',
+                Value: ID,
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: customer_ID,
+                Label: 'Customer',
+            },
+            {
+                $Type: 'UI.DataField',
+                Label: 'Order Date',
+                Value: orderDate,
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: createdBy,
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: modifiedBy,
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: totalPrice,
+                Label: 'Total Price',
+            },
+            {
+                $Type: 'UI.DataField',
+                Label: 'Currency',
+                Value: currency_code,
+            },
+        ],
+    },
+    UI.LineItem                  : [
+        {
+            $Type: 'UI.DataField',
+            Value: ID,
+            Label: 'ID',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: orderDate,
+            Label: 'Order Date',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: customer.name,
+            Label: 'Name',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: createdBy,
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: modifiedBy,
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: totalPrice,
+            Label: 'Total Price',
+        },
+        {
+            $Type: 'UI.DataField',
+            Value: currency_code,
+        },
+    ]
+);
+
+annotate service.Orders with {
+    totalPrice @readonly;
+
+    customer   @(
+        Common.Text           : customer.name,
+        Common.TextArrangement: #TextOnly,
+        Common.ValueList      : {
+            $Type         : 'Common.ValueListType',
+            CollectionPath: 'Customers',
+            Parameters    : [
+                {
+                    $Type            : 'Common.ValueListParameterInOut',
+                    LocalDataProperty: customer_ID,
+                    ValueListProperty: 'ID',
+                },
+                {
+                    $Type            : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty: 'name',
+                },
+            ],
+        }
+    );
+};
+
+annotate service.Products_Orders with @(UI.LineItem: [
+    {
+        $Type: 'UI.DataField',
+        Label: 'Product',
+        Value: product.name,
+    },
+    {
+        $Type: 'UI.DataField',
+        Label: 'Quantity',
+        Value: quantity,
+    },
+], );
