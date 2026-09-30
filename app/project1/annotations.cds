@@ -46,28 +46,38 @@ annotate service.Products with @(
     UI.LineItem : [
         {
             $Type : 'UI.DataField',
-            Label : 'name',
+            Label : 'Name',
             Value : name,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'descr',
+            Value : category.title,
+            Label : 'Category',
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Description',
             Value : descr,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'price',
+            Label : 'Price',
             Value : price,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'size',
+            Label : 'Currency',
+            Value : currency_code,
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Size',
             Value : size,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'currency_code',
-            Value : currency_code,
+            Value : stock,
+            Label : 'Stock',
         },
     ],
 );
