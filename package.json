@@ -15,6 +15,36 @@
     "@cap-js/sqlite": "^3.0.2",
     "@sap/cds": "^10.0.6"
   },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "url": "db.sqlite"
+        }
+      },
+      "auth": {
+        "strategy": "mock",
+        "users": {
+          "Admin": {
+            "roles": [
+              "Admin"
+            ]
+          },
+          "Manager": {
+            "roles": [
+              "Manager"
+            ]
+          },
+          "John Smith": {
+            "roles": [
+              "Customer"
+            ]
+          }
+        }
+      }
+    }
+  },
   "workspaces": [
     "app/*"
   ],
