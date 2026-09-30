@@ -2,6 +2,24 @@ using {warehouse} from '../db/warehouseSchema';
 
 service WarehouseService @(odata: '/warehouse') {
 
+    @(restrict: [
+        {
+            grant: 'READ',
+            to   : 'authenticated-user'
+        },
+        {
+            grant: [
+                'CREATE',
+                'UPDATE',
+                'DELETE'
+            ],
+            to   : [
+                'Admin',
+                'Manager'
+            ]
+        }
+    ])
+    @odata.draft.enabled
     entity Products         as projection on warehouse.Products;
     entity Suppliers        as projection on warehouse.Suppliers;
     entity Categories       as projection on warehouse.Categories;

@@ -7,13 +7,44 @@ namespace warehouse;
 
 entity Products : managed {
   key ID       : UUID;
+
+      @mandatory
       name     : String(100);
+
+      @mandatory
       descr    : String(500);
+
+      @mandatory
+      @assert.range: [
+        0.01,
+        99999
+      ]
       price    : Decimal(8, 2);
+
+      @mandatory
+      @assert.range: [
+        0.1,
+        100
+      ]
       size     : Decimal(4, 2);
+
+      @mandatory
+      @assert.target
       currency : Currency;
+
+      @mandatory
+      @assert.range: [
+        0,
+        99999
+      ]
       stock    : Integer;
+
+      @mandatory
+      @assert.target
       supplier : Association to Suppliers not null;
+
+      @mandatory
+      @assert.target
       category : Association to Categories not null;
 }
 
