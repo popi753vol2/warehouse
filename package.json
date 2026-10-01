@@ -10,7 +10,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@cap-js/sqlite": "^3.0.2",
     "@sap/cds": "^10.0.6"

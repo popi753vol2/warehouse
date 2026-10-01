@@ -153,6 +153,13 @@
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "tableSettings": {
                     "type": "ResponsiveTable"
+                  },
+                  "actions": {
+                    "CreateOrderCustom": {
+                      "press": ".extension.project1.ext.controller.ListReportExt.onOpenCreateOrderDialog",
+                      "text": "Create Order",
+                      "requiresSelection": true
+                    }
                   }
                 }
               }
