@@ -20,6 +20,7 @@ service WarehouseService @(odata: '/warehouse') {
         }
     ])
     @odata.draft.enabled
+    @cds.redirection.target
     entity Products        as projection on warehouse.Products;
 
     entity Suppliers       as projection on warehouse.Suppliers;
@@ -27,7 +28,11 @@ service WarehouseService @(odata: '/warehouse') {
 
     @(restrict: [
         {
-            grant: 'READ',
+            grant: [
+                'READ',
+                'UPDATE',
+                'DELETE'
+            ],
             to   : 'Customer',
             where: (customer.name = $user)
         },
@@ -43,14 +48,30 @@ service WarehouseService @(odata: '/warehouse') {
             ]
         }
     ])
-    entity Orders          as projection on warehouse.Orders;
+    @odata.draft.enabled
+    entity Orders          as projection on warehouse.Orders {
+        *,
+        virtual customerFieldControl : Integer
+    };
 
-    action submitOrder(customer_ID: UUID, currency_code: String(3), date: Date, items: array of {
-        product_ID : UUID;
-        quantity   : Integer
-    })               returns Orders;
+    action submitOrder(
+            customer_ID: UUID,
+            currency_code: String(3),
+            date: Date,
+            items: array of {
+            product_ID : UUID;
+            quantity   : Integer
+        })               returns Orders;
 
-    entity Products_Orders as projection on warehouse.Products_Orders;
+    entity Products_Orders as
+        projection on warehouse.Products_Orders {
+            *,
+            product : redirected to OrderProducts
+        };
+
+    @readonly
+    entity OrderProducts   as projection on warehouse.Products;
+
     entity Customers       as projection on warehouse.Customers;
 
     action getUser() returns {

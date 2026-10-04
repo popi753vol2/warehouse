@@ -23,6 +23,26 @@ export default class WarehouseService extends cds.ApplicationService {
             }
         };
 
+        const calculateTotalPrice = async (items, currencyCode) => {
+            const products = await SELECT.from(Products).where({ ID: { in: items.map(item => item.product_ID) } });
+
+            const rates = await fetchRates(currencyCode);
+
+            const totalPrice = items.reduce((total, item) => {
+                const product = products.find(p => p.ID === item.product_ID);
+                if (!product) {
+                    throw new Error(`Product with ID ${item.product_ID} not found`);
+                }
+
+                const exchangeRate = rates[product.currency_code].toFixed(4);
+                const productPriceInTargetCurrency = product.price / exchangeRate;
+
+                return total + (productPriceInTargetCurrency.toFixed(4) * (item.quantity || 1));
+            }, 0);
+
+            return totalPrice;
+        }
+
         this.on('getUser', async (req) => {
             const user = req.user;
             const isCustomer = user.is('Customer');
@@ -44,6 +64,17 @@ export default class WarehouseService extends cds.ApplicationService {
             }
         });
 
+        const setCustomerFieldControl = (orders, req) => {
+            const value = req.user.is('Admin') || req.user.is('Manager') ? 3 : 1;
+            const results = Array.isArray(orders) ? orders : [orders];
+
+            for (const order of results) {
+                if (order) order.customerFieldControl = value;
+            }
+        };
+
+        this.after('EDIT', Orders, setCustomerFieldControl);
+
         this.on('submitOrder', async (req) => {
             const { customer_ID, currency_code, date, items } = req.data;
 
@@ -54,21 +85,7 @@ export default class WarehouseService extends cds.ApplicationService {
                 return req.error(400, 'At least one item is required to submit an order');
             }
 
-            const products = await SELECT.from(Products).where({ ID: { in: items.map(item => item.product_ID) } });
-
-            const rates = await fetchRates(currency_code);
-
-            const totalPrice = items.reduce((total, item) => {
-                const product = products.find(p => p.ID === item.product_ID);
-                if (!product) {
-                    throw new Error(`Product with ID ${item.product_ID} not found`);
-                }
-
-                const exchangeRate = rates[product.currency_code].toFixed(4);
-                const productPriceInTargetCurrency = product.price / exchangeRate;
-
-                return total + (productPriceInTargetCurrency.toFixed(4) * (item.quantity || 1));
-            }, 0);
+            const totalPrice = await calculateTotalPrice(items, currency_code);
 
             const order = {
                 ID: cds.utils.uuid(),
@@ -91,6 +108,20 @@ export default class WarehouseService extends cds.ApplicationService {
 
             return SELECT.one(Orders).where({ ID: order.ID });
         });
+
+        this.before("UPDATE", Orders, async (req) => {
+            console.log("Before UPDATE hook triggered for Orders");
+
+            const { ID, currency_code } = req.data;
+
+            const productsOrders = await SELECT.from(Products_Orders)
+                .where({ order_ID: ID });
+
+            const updatedTotalPrice = await calculateTotalPrice(productsOrders, currency_code);
+
+            req.data.totalPrice = updatedTotalPrice;
+        }
+        );
 
         return super.init();
     }

@@ -151,7 +151,7 @@ annotate service.Orders with @(
         TypeNamePlural: 'Orders',
         Title         : {
             $Type: 'UI.DataField',
-            Value: orderDate,
+            Value: ID,
         },
     },
     UI.Facets                    : [
@@ -172,11 +172,7 @@ annotate service.Orders with @(
     UI.FieldGroup #GeneratedGroup: {
         $Type: 'UI.FieldGroupType',
         Data : [
-            {
-                $Type: 'UI.DataField',
-                Label: 'ID',
-                Value: ID,
-            },
+
             {
                 $Type: 'UI.DataField',
                 Value: customer_ID,
@@ -247,6 +243,7 @@ annotate service.Orders with {
     totalPrice @readonly;
 
     customer   @(
+        Common.FieldControl  : customerFieldControl,
         Common.Text           : customer.name,
         Common.TextArrangement: #TextOnly,
         Common.ValueList      : {
@@ -267,6 +264,8 @@ annotate service.Orders with {
     );
 };
 
+annotate service.Orders with @Capabilities.InsertRestrictions.Insertable: false;
+
 annotate service.Products_Orders with @(UI.LineItem: [
     {
         $Type: 'UI.DataField',
@@ -275,7 +274,18 @@ annotate service.Products_Orders with @(UI.LineItem: [
     },
     {
         $Type: 'UI.DataField',
+        Label: 'Price',
+        Value: product.price,
+    },
+    {
+        $Type: 'UI.DataField',
+        Label: 'Currency',
+        Value: product.currency_code,
+    },
+    {
+        $Type: 'UI.DataField',
         Label: 'Quantity',
         Value: quantity,
     },
 ], );
+
