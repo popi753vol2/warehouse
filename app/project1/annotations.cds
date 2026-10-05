@@ -270,7 +270,7 @@ annotate service.Products_Orders with @(UI.LineItem: [
     {
         $Type: 'UI.DataField',
         Label: 'Product',
-        Value: product.name,
+        Value: product_ID,
     },
     {
         $Type: 'UI.DataField',
@@ -288,4 +288,37 @@ annotate service.Products_Orders with @(UI.LineItem: [
         Value: quantity,
     },
 ], );
+
+// Value help for product selection in the order items sub-table.
+// Points to OrderProducts (read-only Products projection) so it
+// shows all products — duplicates are rejected by the backend.
+annotate service.Products_Orders with {
+    product @(
+        Common.Text           : product.name,
+        Common.TextArrangement: #TextOnly,
+        Common.ValueList      : {
+            $Type          : 'Common.ValueListType',
+            CollectionPath : 'OrderProducts',
+            Parameters     : [
+                {
+                    $Type            : 'Common.ValueListParameterOut',
+                    LocalDataProperty: product_ID,
+                    ValueListProperty: 'ID',
+                },
+                {
+                    $Type            : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty: 'name',
+                },
+                {
+                    $Type            : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty: 'price',
+                },
+                {
+                    $Type            : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty: 'currency_code',
+                },
+            ],
+        }
+    );
+};
 

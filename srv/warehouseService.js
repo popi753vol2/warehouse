@@ -43,6 +43,20 @@ export default class WarehouseService extends cds.ApplicationService {
             return totalPrice;
         }
 
+        const checkDuplicateOnProductOrders = async (draftProducts) => {
+            const newDraftProducts = [];
+
+            for (let index = 0; index < draftProducts.length; index++) {
+                const foundIndex = newDraftProducts.findIndex(product => product.product_ID === draftProducts[index].product_ID);
+                if (foundIndex !== -1) {
+                    newDraftProducts[foundIndex].quantity += draftProducts[index].quantity;
+                } else {
+                    newDraftProducts.push(draftProducts[index]);
+                }
+            }
+            return newDraftProducts;
+        }
+
         this.on('getUser', async (req) => {
             const user = req.user;
             const isCustomer = user.is('Customer');
@@ -109,19 +123,17 @@ export default class WarehouseService extends cds.ApplicationService {
             return SELECT.one(Orders).where({ ID: order.ID });
         });
 
-        this.before("UPDATE", Orders, async (req) => {
-            console.log("Before UPDATE hook triggered for Orders");
-
+        this.before('SAVE', Orders, async (req) => {
             const { ID, currency_code } = req.data;
 
-            const productsOrders = await SELECT.from(Products_Orders)
+            const draftProducts = await SELECT.from('WarehouseService_Products_Orders_drafts')
                 .where({ order_ID: ID });
 
-            const updatedTotalPrice = await calculateTotalPrice(productsOrders, currency_code);
+            const updatedTotalPrice = await calculateTotalPrice(draftProducts, currency_code);
 
-            req.data.totalPrice = updatedTotalPrice;
-        }
-        );
+            req.data.totalPrice = await updatedTotalPrice;
+            req.data.products = await checkDuplicateOnProductOrders(draftProducts);
+        });
 
         return super.init();
     }

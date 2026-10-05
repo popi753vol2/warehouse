@@ -64,8 +64,16 @@ entity Categories : managed {
 
 entity Products_Orders : managed {
   key ID       : UUID;
-      product  : Association to Products;
+
+      @mandatory
+      product  : Association to Products not null;
       order    : Association to Orders;
+
+      @mandatory
+      @assert.range: [
+        0,
+        99999
+      ]
       quantity : Integer;
 }
 
@@ -75,12 +83,12 @@ entity Orders : managed {
       totalPrice : Decimal(10, 2);
       currency   : Currency;
       customer   : Association to Customers;
-      products   : Association to many Products_Orders
+      products   : Composition of many Products_Orders
                      on products.order.ID = $self.ID;
 }
 
 entity Customers : managed {
-  key ID     : UUID;
-      name   : String;
-      email  : String;
+  key ID    : UUID;
+      name  : String;
+      email : String;
 }
